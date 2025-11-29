@@ -1,3 +1,12 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+
+/**
+ *
+ * @author Admin
+ */
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -15,7 +24,10 @@ class LoginForm extends JFrame {
         setTitle("ĐĂNG NHẬP HỆ THỐNG");
         setSize(350, 180);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null); // Căn giữa màn hình
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (screen.width - getWidth()) / 2;
+        int y = (screen.height - getHeight()) / 2;
+        setLocation(x, y); // Căn giữa màn hình
         setLayout(new BorderLayout(10, 10));
 
         // Panel nhập liệu
@@ -23,11 +35,11 @@ class LoginForm extends JFrame {
         pnlCenter.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 20));
         
         pnlCenter.add(new JLabel("Tài khoản:"));
-        txtUser = new JTextField("admin"); // Mặc định cho nhanh test
+        txtUser = new JTextField(); // 
         pnlCenter.add(txtUser);
 
         pnlCenter.add(new JLabel("Mật khẩu:"));
-        txtPass = new JPasswordField("123");
+        txtPass = new JPasswordField();
         pnlCenter.add(txtPass);
 
         add(pnlCenter, BorderLayout.CENTER);
@@ -88,10 +100,13 @@ public class Giaodienqlsv extends JFrame {
         thongKeService = new ThongKeService(); // Class thực thi IThongKe
 
         // --- CẤU HÌNH GIAO DIỆN ---
-        setTitle("CHƯƠNG TRÌNH QUẢN LÝ SINH VIÊN (MVC)");
+        setTitle("CHƯƠNG TRÌNH QUẢN LÝ SINH VIÊN ");
         setSize(1200, 750);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+       Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (screen.width - getWidth()) / 2;
+        int y = (screen.height - getHeight()) / 2;
+        setLocation(x, y);
 
         // 1. FORM NHẬP LIỆU (NORTH)
         JPanel inputPanel = new JPanel(new GridLayout(6, 2, 10, 10));
@@ -103,7 +118,7 @@ public class Giaodienqlsv extends JFrame {
         txtNganh = new JTextField();
         txtDiem = new JTextField();
 
-        male = new JRadioButton("Nam", true);
+        male = new JRadioButton("Nam",true);
         female = new JRadioButton("Nữ");
         ButtonGroup genderGroup = new ButtonGroup();
         genderGroup.add(male);
@@ -202,7 +217,7 @@ public class Giaodienqlsv extends JFrame {
         btnDocFile.addActionListener(e -> loadFile());
         btnThongKeNganh.addActionListener(e -> {
             String kq = thongKeService.thongKeNganh(quanLy.getDanhSachSV());
-            txtThongKe.setText(kq);
+            txtThongKe.setText(kq);// cập nhật nội dung vào JTextArea
         });
         btnThongKeGioiTinh.addActionListener(e -> {
             String kq = thongKeService.thongKeGioiTinh(quanLy.getDanhSachSV());
@@ -229,7 +244,6 @@ public class Giaodienqlsv extends JFrame {
         sv.setNgaySinh(txtNgaySinh.getText().trim());
         sv.setGioiTinh(male.isSelected() ? "Nam" : "Nữ");
         sv.setNganhHoc(txtNganh.getText().trim());
-
         String strDiem = txtDiem.getText().trim();
         ArrayList<Double> listDiem = new ArrayList<>();
         if (!strDiem.isEmpty()) {
