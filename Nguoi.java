@@ -2,7 +2,7 @@ package connectdb;
 
 import java.io.Serializable;
 
-public class Nguoi implements Serializable {
+public class Nguoi  {
     private String hoTen;
     private String ngaySinh;
     private String gioiTinh;
