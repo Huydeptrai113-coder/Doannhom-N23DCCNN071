@@ -3,9 +3,10 @@ import java.util.Collections;
 
 public class QuanLySinhVien {
     private ArrayList<SinhVien> danhSachSV;
+    private SinhVienDAO dao = new SinhVienDAO();
 
     public QuanLySinhVien() {
-        this.danhSachSV = new ArrayList<>();
+        this.danhSachSV = new ArrayList<>(dao.getAll());
     }
 
     public ArrayList<SinhVien> getDanhSachSV() {
@@ -21,6 +22,7 @@ public class QuanLySinhVien {
             return false;
         }
         danhSachSV.add(sv);
+        dao.insert(sv);
         return true;
     }
 
@@ -29,6 +31,7 @@ public class QuanLySinhVien {
         if (svCu == null) {
             return false;
         }
+        dao.update(mssv, svMoi);
         svCu.setHoTen(svMoi.getHoTen());
         svCu.setNgaySinh(svMoi.getNgaySinh());
         svCu.setGioiTinh(svMoi.getGioiTinh());
@@ -43,6 +46,7 @@ public class QuanLySinhVien {
             return false;
         }
         danhSachSV.remove(sv);
+        dao.delete(mssv);
         return true;
     }
 
@@ -65,7 +69,6 @@ public class QuanLySinhVien {
         return ketQua;
     }
 
-    // Thêm nếu dùng btnTimNganh
     public ArrayList<SinhVien> timSinhVienTheoNganh(String nganh) {
         ArrayList<SinhVien> ketQua = new ArrayList<>();
         for (SinhVien sv : danhSachSV) {
