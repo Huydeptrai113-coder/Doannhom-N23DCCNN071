@@ -1,3 +1,4 @@
+package connectdb;
 
 import java.io.Serializable;
 
