@@ -81,14 +81,28 @@ public class QuanLySinhVien {
     // ================== SẮP XẾP (ĐÃ SỬA LẠI ĐÚNG LOGIC CỦA BẠN) ==================
 
     // 1. Sắp xếp theo tên (A-Z)
-    public void sapXepTheoTen() {
-        Collections.sort(this.danhSachSV, new Comparator<SinhVien>() {
-            @Override
-            public int compare(SinhVien sv1, SinhVien sv2) {
-                return sv1.getHoTen().compareToIgnoreCase(sv2.getHoTen());
-            }
-        });
+    private String layTen(String hoTen) {
+    String[] parts = hoTen.trim().split("\\s+");
+    return parts[parts.length - 1]; // lấy phần cuối làm tên
     }
+    public void sapXepTheoTen() {
+    Collections.sort(this.danhSachSV, new Comparator<SinhVien>() {
+        @Override
+        public int compare(SinhVien sv1, SinhVien sv2) {
+            String hoTen1 = sv1.getHoTen().trim();
+            String hoTen2 = sv2.getHoTen().trim();
+            
+            String ten1 = layTen(hoTen1);
+            String ten2 = layTen(hoTen2);
+
+            int cmp = ten1.compareToIgnoreCase(ten2);
+            if (cmp != 0) return cmp;
+
+            // Nếu tên bằng nhau, so sánh toàn bộ họ tên
+            return hoTen1.compareToIgnoreCase(hoTen2);
+        }
+    });
+}
 
     // 2. Sắp xếp theo điểm TB (Giảm dần)
     public void sapXepTheoDiemTB() {
@@ -125,3 +139,4 @@ public class QuanLySinhVien {
         return dao.thongKeTheoGioiTinh();
     }
 }
+
