@@ -1,19 +1,14 @@
-/*
- * SinhVienDAO – MySQL
- */
 package connectdb;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 public class SinhVienDAO extends BaseDAO {
 
-    // ================== HELPER ==================
-
-    // Lấy điểm thứ index trong danhSachDiem, thiếu thì trả 0
+    // Giữ nguyên tên hàm này
     private double getDiemAt(SinhVien sv, int index) {
         if (sv.getDanhSachDiem() == null || sv.getDanhSachDiem().size() <= index) {
             return 0.0;
@@ -22,28 +17,26 @@ public class SinhVienDAO extends BaseDAO {
         return d != null ? d : 0.0;
     }
 
-    // Map 1 dòng ResultSet -> SinhVien
     private SinhVien mapRowToSinhVien(ResultSet rs) throws SQLException {
         return new SinhVien(
-                rs.getString("mssv"),
-                rs.getString("hoTen"),
-                rs.getString("ngaySinh"),
-                rs.getString("gioiTinh"),
-                rs.getString("nganhHoc"),
-                rs.getDouble("diem1"),
-                rs.getDouble("diem2"),
-                rs.getDouble("diem3")
+            rs.getString("mssv"),
+            rs.getString("hoTen"),
+            rs.getString("ngaySinh"),
+            rs.getString("gioiTinh"),
+            rs.getString("nganhHoc"),
+            rs.getDouble("diem1"),
+            rs.getDouble("diem2"),
+            rs.getDouble("diem3")
         );
     }
 
-    // Đóng connection (dùng hàm có sẵn của BaseDAO)
+    // Đóng kết nối
     private void close(Connection conn, PreparedStatement ps, ResultSet rs) {
         closeConnection(conn, ps, rs);
     }
 
-    // ================== SELECT LIST ==================
+    // ================== SELECT ==================
 
-    // Lấy toàn bộ sinh viên
     public List<SinhVien> getAll() {
         List<SinhVien> list = new ArrayList<>();
         Connection conn = getConnection();
@@ -65,79 +58,7 @@ public class SinhVienDAO extends BaseDAO {
         return list;
     }
 
-    // Lấy tất cả sinh viên sắp xếp theo tên (A-Z)
-    public List<SinhVien> getAllSortedByName() {
-        List<SinhVien> list = new ArrayList<>();
-        Connection conn = getConnection();
-        String sql = "SELECT * FROM sinhvien ORDER BY hoTen ASC";
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            ps = conn.prepareStatement(sql);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                list.add(mapRowToSinhVien(rs));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            close(conn, ps, rs);
-        }
-        return list;
-    }
-
-    // Lấy tất cả sinh viên sắp xếp theo điểm trung bình giảm dần
-    public List<SinhVien> getAllSortedByDiemTB() {
-        List<SinhVien> list = new ArrayList<>();
-        Connection conn = getConnection();
-        String sql = "SELECT * FROM sinhvien " +
-                     "ORDER BY (diem1 + diem2 + diem3) / 3 DESC";
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            ps = conn.prepareStatement(sql);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                list.add(mapRowToSinhVien(rs));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            close(conn, ps, rs);
-        }
-        return list;
-    }
-
-    // Lấy TOP N sinh viên điểm TB cao nhất
-    public List<SinhVien> getTopSinhVien(int soLuong) {
-        List<SinhVien> list = new ArrayList<>();
-        Connection conn = getConnection();
-        String sql = "SELECT * FROM sinhvien " +
-                     "ORDER BY (diem1 + diem2 + diem3) / 3 DESC " +
-                     "LIMIT ?";
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        try {
-            ps = conn.prepareStatement(sql);
-            ps.setInt(1, soLuong);
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                list.add(mapRowToSinhVien(rs));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            close(conn, ps, rs);
-        }
-        return list;
-    }
-
-    // ================== SEARCH ==================
-
-    // Tìm 1 sinh viên theo MSSV
+    // Mấy hàm search giữ nguyên tên
     public SinhVien findByMssv(String mssv) {
         SinhVien sv = null;
         Connection conn = getConnection();
@@ -160,7 +81,6 @@ public class SinhVienDAO extends BaseDAO {
         return sv;
     }
 
-    // Tìm sinh viên theo tên (gần đúng)
     public List<SinhVien> searchByName(String keyword) {
         List<SinhVien> list = new ArrayList<>();
         Connection conn = getConnection();
@@ -183,7 +103,6 @@ public class SinhVienDAO extends BaseDAO {
         return list;
     }
 
-    // Tìm sinh viên theo ngành (gần đúng)
     public List<SinhVien> searchByNganh(String keyword) {
         List<SinhVien> list = new ArrayList<>();
         Connection conn = getConnection();
@@ -206,15 +125,10 @@ public class SinhVienDAO extends BaseDAO {
         return list;
     }
 
-    // ================== THỐNG KÊ ==================
-
-    // Thống kê số lượng sinh viên theo giới tính
-    // key: "Nam", "Nữ", ...  value: số lượng
     public Map<String, Integer> thongKeTheoGioiTinh() {
         Map<String, Integer> kq = new HashMap<>();
         Connection conn = getConnection();
-        String sql = "SELECT gioiTinh, COUNT(*) AS soLuong " +
-                     "FROM sinhvien GROUP BY gioiTinh";
+        String sql = "SELECT gioiTinh, COUNT(*) AS soLuong FROM sinhvien GROUP BY gioiTinh";
         PreparedStatement ps = null;
         ResultSet rs = null;
 
@@ -222,9 +136,7 @@ public class SinhVienDAO extends BaseDAO {
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
-                String gt = rs.getString("gioiTinh");
-                int soLuong = rs.getInt("soLuong");
-                kq.put(gt, soLuong);
+                kq.put(rs.getString("gioiTinh"), rs.getInt("soLuong"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -234,14 +146,11 @@ public class SinhVienDAO extends BaseDAO {
         return kq;
     }
 
-    // ================== INSERT / UPDATE / DELETE ==================
+    // ================== CRUD (Giữ nguyên tên hàm) ==================
 
-    // Thêm sinh viên
     public boolean insert(SinhVien sv) {
         Connection conn = getConnection();
-        String sql = "INSERT INTO sinhvien " +
-                "(mssv, hoTen, ngaySinh, gioiTinh, nganhHoc, diem1, diem2, diem3) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO sinhvien (mssv, hoTen, ngaySinh, gioiTinh, nganhHoc, diem1, diem2, diem3) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = null;
 
         try {
@@ -263,19 +172,9 @@ public class SinhVienDAO extends BaseDAO {
         }
     }
 
-    // Cập nhật sinh viên (mssv cũ -> sv mới)
     public boolean update(String mssvCu, SinhVien svMoi) {
         Connection conn = getConnection();
-        String sql = "UPDATE sinhvien SET " +
-                "mssv = ?, " +
-                "hoTen = ?, " +
-                "ngaySinh = ?, " +
-                "gioiTinh = ?, " +
-                "nganhHoc = ?, " +
-                "diem1 = ?, " +
-                "diem2 = ?, " +
-                "diem3 = ? " +
-                "WHERE mssv = ?";
+        String sql = "UPDATE sinhvien SET mssv=?, hoTen=?, ngaySinh=?, gioiTinh=?, nganhHoc=?, diem1=?, diem2=?, diem3=? WHERE mssv=?";
         PreparedStatement ps = null;
 
         try {
@@ -298,7 +197,6 @@ public class SinhVienDAO extends BaseDAO {
         }
     }
 
-    // Xóa sinh viên
     public boolean delete(String mssv) {
         Connection conn = getConnection();
         String sql = "DELETE FROM sinhvien WHERE mssv = ?";
