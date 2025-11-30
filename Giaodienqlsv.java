@@ -167,13 +167,14 @@ public class Giaodienqlsv extends JFrame {
         btnThongKeGioiTinh = new JButton("TK Giới Tính");
         btnXepHang = new JButton("Top SV");
         
-        btnGhiFile = new JButton("Lưu File");
-        btnDocFile = new JButton("Đọc File");
+       //btnGhiFile = new JButton("Lưu File");
+        //btnDocFile = new JButton("Đọc File");
 
         // Add buttons (thêm btnTimNganh)
-        funcPanel.add(btnThem); funcPanel.add(btnSua); funcPanel.add(btnXoa); funcPanel.add(btnLamMoi); funcPanel.add(new JLabel(""));
+        funcPanel.add(btnThem); funcPanel.add(btnSua); funcPanel.add(btnXoa); funcPanel.add(btnLamMoi); 
         funcPanel.add(btnTimMSSV); funcPanel.add(btnTimTen); funcPanel.add(btnTimNganh); funcPanel.add(btnSapXepTen); funcPanel.add(btnSapXepTB);
-        funcPanel.add(btnGhiFile); funcPanel.add(btnDocFile); funcPanel.add(btnThongKeNganh); funcPanel.add(btnThongKeGioiTinh); funcPanel.add(btnXepHang);
+        //funcPanel.add(btnGhiFile); funcPanel.add(btnDocFile); 
+        funcPanel.add(btnThongKeNganh); funcPanel.add(btnThongKeGioiTinh); funcPanel.add(btnXepHang);
 
         add(funcPanel, BorderLayout.SOUTH);
 
