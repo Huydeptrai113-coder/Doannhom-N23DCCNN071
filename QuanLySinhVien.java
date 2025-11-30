@@ -1,8 +1,9 @@
-package connectdb;
-
+package doanhaha;
+import doanhaha.SinhVienDAO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 
 public class QuanLySinhVien {
@@ -121,22 +122,42 @@ public class QuanLySinhVien {
 
     // ================== TOP & THỐNG KÊ ==================
 
-    public void layTopSinhVien(int soLuong) {
-        // Sắp xếp trước
-        sapXepTheoDiemTB();
-        
-        // Lấy top N
-        if (this.danhSachSV.size() > soLuong) {
-            ArrayList<SinhVien> topList = new ArrayList<>();
-            for(int i = 0; i < soLuong; i++) {
-                topList.add(this.danhSachSV.get(i));
-            }
-            this.danhSachSV = topList;
-        }
+    public String topSinhVien() {
+    // Lấy top 5 sinh viên
+    sapXepTheoDiemTB();
+    
+    int soLuong = Math.min(5, danhSachSV.size());
+    StringBuilder sb = new StringBuilder("TOP " + soLuong + " SINH VIÊN:\n\n");
+
+    for (int i = 0; i < soLuong; i++) {
+        SinhVien sv = danhSachSV.get(i);
+        sb.append((i+1) + ". " + sv.getHoTen() 
+                  + " | DTB: " + String.format("%.2f", sv.tinhDiemTrungBinh())
+                  + "\n");
     }
+
+    return sb.toString();
+}
+
 
     public Map<String, Integer> thongKeTheoGioiTinh() {
         return dao.thongKeTheoGioiTinh();
     }
+    public Map<String, Integer> thongKeNganh() {
+    Map<String, Integer> thongKe = new HashMap<>();
+
+    for (SinhVien sv : danhSachSV) {
+        String nganh = sv.getNganhHoc();  // đảm bảo SinhVien có hàm getNganhHoc()
+
+        if (thongKe.containsKey(nganh)) {
+            thongKe.put(nganh, thongKe.get(nganh) + 1);
+        } else {
+            thongKe.put(nganh, 1);
+        }
+    }
+
+    return thongKe;
 }
+}
+
 
