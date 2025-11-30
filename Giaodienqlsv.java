@@ -207,8 +207,8 @@ public class Giaodienqlsv extends JFrame {
             quanLy.sapXepTheoDiemTB();
             capNhatBang(quanLy.getDanhSachSV());
         });
-        btnGhiFile.addActionListener(e -> saveFile());
-        btnDocFile.addActionListener(e -> loadFile());
+        //btnGhiFile.addActionListener(e -> saveFile());
+        //btnDocFile.addActionListener(e -> loadFile());
         btnThongKeNganh.addActionListener(e -> {
         Map<String, Integer> kq = quanLy.thongKeNganh();
         txtThongKe.setText(chuyenMapThanhChuoi(kq));
@@ -360,20 +360,20 @@ public class Giaodienqlsv extends JFrame {
 //        }
 //    }
 
-    private void loadFile() {
-        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            try {
-                File file = fileChooser.getSelectedFile();
-                ArrayList<SinhVien> dsMoi = fileService.docFile(file.getPath());
-                quanLy.setDanhSachSV(dsMoi);
-                capNhatBang(dsMoi);
-                JOptionPane.showMessageDialog(this, "Đọc file thành công!");
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Lỗi đọc file: " + e.getMessage());
-            }
-        }
-    }
+//    private void loadFile() {
+//        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+//            try {
+//                File file = fileChooser.getSelectedFile();
+//                ArrayList<SinhVien> dsMoi = fileService.docFile(file.getPath());
+//                quanLy.setDanhSachSV(dsMoi);
+//                capNhatBang(dsMoi);
+//                JOptionPane.showMessageDialog(this, "Đọc file thành công!");
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                JOptionPane.showMessageDialog(this, "Lỗi đọc file: " + e.getMessage());
+//            }
+//        }
+//    }
     
     private void doDuLieuLenForm() {
         int row = table.getSelectedRow();
