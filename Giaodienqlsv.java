@@ -1,18 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author Admin
- */
+package doanhaha;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import doanhaha.QuanLySinhVien;
+import java.util.Map;
 
 // ================== 1. FORM ĐĂNG NHẬP ==================
 class LoginForm extends JFrame {
@@ -76,8 +70,8 @@ public class Giaodienqlsv extends JFrame {
     
     // Khai báo các Service (Logic, File, Thống kê)
     private QuanLySinhVien quanLy; 
-    private IFileHandler fileService; 
-    private IThongKe thongKeService;
+//    private IFileHandler fileService; 
+//    private IThongKe thongKeService;
 
     // Components Giao diện
     private JTable table;
@@ -96,8 +90,8 @@ public class Giaodienqlsv extends JFrame {
     public Giaodienqlsv() {
         // --- KHỞI TẠO CÁC SERVICE ---
         quanLy = new QuanLySinhVien();
-        fileService = new FileService();       // Class thực thi IFileHandler
-        thongKeService = new ThongKeService(); // Class thực thi IThongKe
+//        fileService = new FileService();       // Class thực thi IFileHandler
+//        thongKeService = new ThongKeService(); // Class thực thi IThongKe
 
         // --- CẤU HÌNH GIAO DIỆN ---
         setTitle("CHƯƠNG TRÌNH QUẢN LÝ SINH VIÊN ");
@@ -216,17 +210,20 @@ public class Giaodienqlsv extends JFrame {
         btnGhiFile.addActionListener(e -> saveFile());
         btnDocFile.addActionListener(e -> loadFile());
         btnThongKeNganh.addActionListener(e -> {
-            String kq = thongKeService.thongKeNganh(quanLy.getDanhSachSV());
-            txtThongKe.setText(kq);// cập nhật nội dung vào JTextArea
+        Map<String, Integer> kq = quanLy.thongKeNganh();
+        txtThongKe.setText(chuyenMapThanhChuoi(kq));
         });
+
         btnThongKeGioiTinh.addActionListener(e -> {
-            String kq = thongKeService.thongKeGioiTinh(quanLy.getDanhSachSV());
-            txtThongKe.setText(kq);
+        Map<String, Integer> kq = quanLy.thongKeTheoGioiTinh();
+        txtThongKe.setText(chuyenMapThanhChuoi(kq));
         });
+
         btnXepHang.addActionListener(e -> {
-            String kq = thongKeService.topSinhVien(quanLy.getDanhSachSV());
-            txtThongKe.setText(kq);
+        String kq = quanLy.topSinhVien();
+        txtThongKe.setText(kq);
         });
+
     }
 
     private SinhVien taoSVTufrom() {
@@ -350,18 +347,18 @@ public class Giaodienqlsv extends JFrame {
         }
     }
 
-    private void saveFile() {
-        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            try {
-                File file = fileChooser.getSelectedFile();
-                fileService.ghiFile(quanLy.getDanhSachSV(), file.getPath());
-                JOptionPane.showMessageDialog(this, "Lưu file thành công!");
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Lỗi lưu file: " + e.getMessage());
-            }
-        }
-    }
+//    private void saveFile() {
+//        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+//            try {
+//                File file = fileChooser.getSelectedFile();
+//                fileService.ghiFile(quanLy.getDanhSachSV(), file.getPath());
+//                JOptionPane.showMessageDialog(this, "Lưu file thành công!");
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                JOptionPane.showMessageDialog(this, "Lỗi lưu file: " + e.getMessage());
+//            }
+//        }
+//    }
 
     private void loadFile() {
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -410,5 +407,12 @@ public class Giaodienqlsv extends JFrame {
                 new LoginForm().setVisible(true);
             }
         });
+    }
+    private String chuyenMapThanhChuoi(Map<String, Integer> map) {
+    StringBuilder sb = new StringBuilder();
+    for (String key : map.keySet()) {
+        sb.append(key).append(": ").append(map.get(key)).append("\n");
+    }
+    return sb.toString();
     }
 }
